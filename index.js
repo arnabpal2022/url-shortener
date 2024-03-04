@@ -3,6 +3,7 @@ const path = require("path");
 
 const urlRoute = require("./routes/user.route");
 const staticRoute = require("./routes/static.route");
+const authRoute = require("./routes/auth.route")
 
 const { connectDatabase } = require("./database/connection");
 const { URL } = require("./models/user.model");
@@ -20,13 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/url", urlRoute);
 app.use("/", staticRoute);
-
-// app.get("/test", async (req, res) => {
-//   const allUrls = await URL.find({});
-//   return res.render("home", {
-//     urls: allUrls,
-//   });
-// });
+app.use("/auth", authRoute)
 
 app.get("/url/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
