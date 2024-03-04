@@ -1,5 +1,8 @@
 const express = require("express");
 const path = require("path");
+const cookieParser = require("cookie-parser");
+
+const { restrictToLoggedInUserOnly, checkAuth } = require('./middlewares/auth.middleware')
 
 const urlRoute = require("./routes/user.route");
 const staticRoute = require("./routes/static.route");
@@ -18,9 +21,10 @@ app.set("views", path.resolve("./views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser())
 
-app.use("/url", urlRoute);
-app.use("/", staticRoute);
+app.use("/url", restrictToLoggedInUserOnly, urlRoute);
+app.use("/", checkAuth, staticRoute);
 app.use("/auth", authRoute)
 
 app.get("/url/:shortId", async (req, res) => {
